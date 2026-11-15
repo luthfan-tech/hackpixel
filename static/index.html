@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hackpixel - Hackathon Idea Assistant</title>
+  
+  <!-- Font license note:
+       'Press Start 2P' by CodeMan38 and 'VT323' by Peter Hull are distributed under the SIL Open Font License (OFL).
+       Verify font licenses before commercial distribution. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;500;600;700&family=VT323&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+  <!-- ==============================================================================
+       Hero Section (Untouched from Part 4)
+       ============================================================================== -->
+  <header class="hero-section" id="hero">
+    <div class="hero-container">
+      <div class="hero-text-block">
+        <span class="hero-kicker font-pixel-label" aria-hidden="true">[SYS.INIT // HACKATHON_IDEATION_MODULE]</span>
+        <h1 class="hero-title">Hackpixel</h1>
+        <p class="hero-subtitle">Tell us your hours and theme. Get 10 ideas you can actually finish.</p>
+        <div class="hero-cta-wrapper">
+          <a href="#ideasForm" class="pixel-cta-btn" id="heroCta" aria-label="Jump to idea generator form">
+            <span class="cta-bracket" aria-hidden="true">(</span><span class="cta-label">Generate ideas</span><span class="cta-bracket" aria-hidden="true">)</span>
+          </a>
+        </div>
+      </div>
+
+            <div class="hero-art-block" aria-hidden="true">
+        <!-- 3D-Style Isometric Topographic Floating Terrain (Pure Canvas) -->
+        <canvas id="heroTerrainCanvas" class="hero-terrain-canvas" width="480" height="380" aria-hidden="true">
+          <p class="visually-hidden">Decorative 3D isometric topographic terrain slab</p>
+        </canvas>
+      </div>
+    </div>
+
+    <!-- Scrolling Ticker Strip Under Hero -->
+    <div class="hero-ticker-wrap" aria-hidden="true">
+      <div class="hero-ticker-track">
+        <span class="ticker-text">Hours left &middot; Theme &middot; Stack &middot; Team size &middot; Tone &middot;&nbsp;</span>
+        <span class="ticker-text">Hours left &middot; Theme &middot; Stack &middot; Team size &middot; Tone &middot;&nbsp;</span>
+        <span class="ticker-text">Hours left &middot; Theme &middot; Stack &middot; Team size &middot; Tone &middot;&nbsp;</span>
+        <span class="ticker-text">Hours left &middot; Theme &middot; Stack &middot; Team size &middot; Tone &middot;&nbsp;</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==============================================================================
+       System Status Strip (Real configuration & browser statistics)
+       ============================================================================== -->
+  <section class="status-strip-wrapper" id="systemStatusSection" aria-label="System status">
+    <div class="status-strip">
+      <div class="status-cell">
+        <span class="status-indicator-dot" aria-hidden="true"></span>
+        <span class="status-label">SYS_MODE:</span>
+        <strong class="status-val font-pixel-label" id="statusMode">Checking...</strong>
+      </div>
+      <div class="status-divider" aria-hidden="true">//</div>
+      <div class="status-cell">
+        <span class="status-label">LOCAL_IDEAS_GENERATED:</span>
+        <strong class="status-val font-pixel-label" id="statusIdeasCount">0</strong>
+      </div>
+      <div class="status-divider" aria-hidden="true">//</div>
+      <div class="status-cell">
+        <span class="status-label">LAST_RUN:</span>
+        <strong class="status-val font-pixel-label" id="statusLastRun">None recorded</strong>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================================================
+       Body Layout: Form, Results, Recent Ideas, What You Get, and How Scores Work
+       ============================================================================== -->
+  <main class="page-body-grid">
+
+    <!-- 1. Left Column: Generate Form (Sticky on desktop) -->
+    <section class="body-area-form" id="ideasFormSection" aria-labelledby="form-heading">
+      <div class="card form-card">
+        <h2 id="form-heading">Hackathon Parameters</h2>
+        <p class="section-intro">Configure your team's real constraints. The backend scores and ranks 10 feasible ideas.</p>
+
+        <!-- Quick Architecture & Modern Jamstack Presets -->
+        <div class="presets-container" aria-label="Preset constraints">
+          <div class="presets-header">
+            <svg class="tech-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            <span class="font-pixel-label">Quick Presets:</span>
+          </div>
+          <div class="preset-buttons" role="group" aria-label="Quick architecture presets">
+            <button type="button" class="btn-preset" data-preset="jamstack" title="Modern Jamstack: Next.js 15, Tailwind, Supabase (24h)">
+              <span class="preset-badge">⚡ Jamstack</span>
+            </button>
+            <button type="button" class="btn-preset" data-preset="ai-native" title="AI-Native Stack: FastAPI, Gemini, React (36h)">
+              <span class="preset-badge">🤖 AI Native</span>
+            </button>
+            <button type="button" class="btn-preset" data-preset="mobile" title="Cross-Platform: Flutter, Dart, Firebase (24h)">
+              <span class="preset-badge">📱 Mobile</span>
+            </button>
+            <button type="button" class="btn-preset" data-preset="data" title="Data Story: Python, Streamlit, DuckDB (12h)">
+              <span class="preset-badge">📊 Data Story</span>
+            </button>
+            <button type="button" class="btn-preset" data-preset="edge" title="Scalable Edge: Go, Docker, PostgreSQL (48h)">
+              <span class="preset-badge">🛡️ Edge / Go</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- General Form Level Error Alert -->
+        <div id="errorBanner" class="error-banner hidden" role="alert" aria-live="assertive">
+          <strong id="errorTitle">Validation Error</strong>
+          <ul id="errorList"></ul>
+        </div>
+
+        <form id="ideasForm" novalidate>
+          <!-- Hours Remaining -->
+          <div class="form-group">
+            <label for="hoursRemaining">
+              <svg class="tech-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              <span>Hours Remaining</span>
+              <span class="required" aria-hidden="true">*</span>
+            </label>
+            <input 
+              type="number" 
+              id="hoursRemaining" 
+              name="hours_remaining" 
+              min="0.1" 
+              max="1000" 
+              step="0.5" 
+              value="24" 
+              required 
+              aria-describedby="hoursHelp err-hours_remaining"
+            >
+            <small id="hoursHelp" class="help-text">Hours left until submission (&gt; 0 and &le; 1000).</small>
+            <span class="field-error-msg hidden" id="err-hours_remaining" aria-live="polite"></span>
+          </div>
+
+          <!-- Team Size -->
+          <div class="form-group">
+            <label for="teamSize">
+              <svg class="tech-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+              <span>Team Size</span>
+              <span class="required" aria-hidden="true">*</span>
+            </label>
+            <input 
+              type="number" 
+              id="teamSize" 
+              name="team_size" 
+              min="1" 
+              max="6" 
+              step="1" 
+              value="3" 
+              required 
+              aria-describedby="teamHelp err-team_size"
+            >
+            <small id="teamHelp" class="help-text">Number of developers (1 to 6 members).</small>
+            <span class="field-error-msg hidden" id="err-team_size" aria-live="polite"></span>
+          </div>
+
+          <!-- Skill Level (Radio Group Fieldset) -->
+          <fieldset class="form-group radio-fieldset" aria-describedby="skillHelp err-skill_level">
+            <legend>
+              <svg class="tech-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+              <span>Skill Level</span>
+              <span class="required" aria-hidden="true">*</span>
+            </legend>
+            <div class="radio-pill-group">
+              <label class="radio-pill-label">
+                <input type="radio" name="skill_level" value="beginner" required>
+                <span>Beginner</span>
+              </label>
+              <label class="radio-pill-label">
+                <input type="radio" name="skill_level" value="intermediate" checked required>
+                <span>Intermediate</span>
+              </label>
+              <label class="radio-pill-label">
+                <input type="radio" name="skill_level" value="advanced" required>
+                <span>Advanced</span>
+              </label>
+            </div>
+            <small id="skillHelp" class="help-text">Overall technical confidence of your team.</small>
+            <span class="field-error-msg hidden" id="err-skill_level" aria-live="polite"></span>
+          </fieldset>
+
+          <!-- Tone (Radio Group Fieldset) -->
+          <fieldset class="form-group radio-fieldset" aria-describedby="toneHelp err-tone">
+            <legend>
+              <svg class="tech-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+              <span>Idea Tone</span>
+              <span class="required" aria-hidden="true">*</span>
+            </legend>
+            <div class="radio-pill-group">
+              <label class="radio-pill-label">
+                <input type="radio" name="tone" value="fun" checked required>
+                <span>Fun</span>
+              </label>
+              <label class="radio-pill-label">
+                <input type="radio" name="tone" value="serious" required>
+                <span>Serious</span>
+              </label>
+              <label class="radio-pill-label">
+                <input type="radio" name="tone" value="experimental" required>
+                <span>Experimental</span>
+              </label>
+            </div>
+            <small id="toneHelp" class="help-text">Project vibe and atmosphere.</small>
+            <span class="field-error-msg hidden" id="err-tone" aria-live="polite"></span>
+          </fieldset>
+
+          <!-- Demo Style (Radio Group Fieldset) -->
+          <fieldset class="form-group radio-fieldset" aria-describedby="demoHelp err-demo_style">
+            <legend>
+              <svg class="tech-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+              <span>Demo Style</span>
+              <span class="required" aria-hidden="true">*</span>
+            </legend>
+            <div class="radio-pill-group">
+              <label class="radio-pill-label">
+                <input type="radio" name="demo_style" value="live_app" checked required>
+                <span>Live App</span>
+              </label>
+              <label class="radio-pill-label">
+                <input type="radio" name="demo_style" value="slides_heavy" required>
+                <span>Slides Heavy</span>
+              </label>
+              <label class="radio-pill-label">
+                <input type="radio" name="demo_style" value="data_story" required>
+                <span>Data Story</span>
+              </label>
+              <label class="radio-pill-label">
+                <input type="radio" name="demo_style" value="no_preference" required>
+                <span>No Pref</span>
+              </label>
+            </div>
+            <small id="demoHelp" class="help-text">Intended final presentation format.</small>
+            <span class="field-error-msg hidden" id="err-demo_style" aria-live="polite"></span>
+          </fieldset>
+
+          <!-- Risk Appetite (Radio Group Fieldset) -->
+          <fieldset class="form-group radio-fieldset" aria-describedby="riskHelp err-risk_appetite">
+            <legend>
+              <svg class="tech-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+              <span>Risk Appetite</span>
+              <span class="required" aria-hidden="true">*</span>
+            </legend>
+            <div class="radio-pill-group">
+              <label class="radio-pill-label">
+                <input type="radio" name="risk_appetite" value="safe" required>
+                <span>Safe</span>
+              </label>
+              <label class="radio-pill-label">
+                <input type="radio" name="risk_appetite" value="balanced" checked required>
+                <span>Balanced</span>
+              </label>
+              <label class="radio-pill-label">
+                <input type="radio" name="risk_appetite" value="ambitious" required>
+                <span>Ambitious</span>
+              </label>
+            </div>
+            <small id="riskHelp" class="help-text">Tradeoff between scope certainty and technical novelty.</small>
+            <span class="field-error-msg hidden" id="err-risk_appetite" aria-live="polite"></span>
+          </fieldset>
+
+          <!-- Preferred Stack -->
+          <div class="form-group">
+            <label for="preferredStack">
+              <svg class="tech-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+              <span>Preferred Stack</span>
+            </label>
+            <input 
+              type="text" 
+              id="preferredStack" 
+              name="preferred_stack" 
+              placeholder="e.g. Next.js 15, FastAPI, React, Supabase"
+              aria-describedby="stackHelp err-preferred_stack"
+            >
+            <small id="stackHelp" class="help-text">Comma-separated tools you prefer to use.</small>
+            <span class="field-error-msg hidden" id="err-preferred_stack" aria-live="polite"></span>
+          </div>
+
+          <!-- Theme -->
+          <div class="form-group">
+            <label for="theme">
+              <svg class="tech-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line></svg>
+              <span>Hackathon Theme / Track</span>
+            </label>
+            <input 
+              type="text" 
+              id="theme" 
+              name="theme" 
+              placeholder="e.g. Modern Web & SEO, AI for Productivity"
+              aria-describedby="themeHelp err-theme"
+            >
+            <small id="themeHelp" class="help-text">Optional track. If empty, general ideas are generated.</small>
+            <span class="field-error-msg hidden" id="err-theme" aria-live="polite"></span>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" id="submitBtn" class="btn btn-primary">
+              <svg class="tech-icon btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+              <span id="btnText">(Generate 10 ideas)</span>
+              <span id="btnSpinner" class="spinner hidden" aria-hidden="true"></span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- 2. Centre Column: Results Region -->
+    <section class="body-area-results" id="resultsSection" aria-labelledby="results-heading">
+      <div class="results-header-block">
+        <div class="results-title-row">
+          <h2 id="results-heading">Generated Ideas</h2>
+          <div class="results-action-buttons">
+            <button type="button" id="exportMarkdownBtn" class="btn btn-action-sm hidden" title="Export all 10 ideas formatted in Markdown for Notion, Discord, or README">
+              <svg class="tech-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>(Export .md)</span>
+            </button>
+          </div>
+        </div>
+        <!-- Screen reader live status announcement line -->
+        <div id="resultsStatus" class="results-status-line" aria-live="polite">Ready to generate. Set parameters and click generate.</div>
+      </div>
+
+      <!-- Copy Toast Notification Popup -->
+      <div id="copyToast" class="copy-toast hidden" role="status" aria-live="polite">
+        <span class="toast-check">&#10003;</span> Copied to clipboard!
+      </div>
+
+      <!-- Generative Pixel Bloom Canvas (Organic Flourish on Generation) -->
+      <canvas id="pixelBloomCanvas" class="pixel-bloom-canvas" aria-hidden="true"></canvas>
+
+      <!-- Controls: Sort & Filter (Strictly 2 sort options + stack filter) -->
+      <div id="resultsControls" class="results-controls-bar card hidden">
+        <div class="controls-row">
+          <div class="control-item">
+            <label for="sortSelect">Sort</label>
+            <select id="sortSelect">
+              <option value="score_desc">Total score (highest first)</option>
+              <option value="hours_asc">Estimated hours (shortest first)</option>
+            </select>
+          </div>
+
+          <div class="control-item">
+            <label for="filterStack">Filter by stack</label>
+            <input type="text" id="filterStack" placeholder="Type tech name (e.g. React, Python)" aria-label="Filter ideas by tech stack">
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State (Before first generation) -->
+      <div id="emptyState" class="empty-state-panel card">
+        <p class="empty-state-line">Fill in your hackathon parameters on the left and click "(Generate ideas)" to produce 10 ranked project cards.</p>
+      </div>
+
+      <!-- Loading State -->
+      <div id="loadingState" class="loading-state-panel card hidden" aria-live="polite">
+        <div class="spinner-large" aria-hidden="true"></div>
+        <p class="loading-main-text">Generating &amp; Ranking 10 Ideas...</p>
+        <p class="loading-sub-text">Scoring with fixed rubric, testing time fit, and querying duplicate warnings.</p>
+      </div>
+
+      <!-- Cards Container -->
+      <div id="ideasList" class="ideas-deck" aria-live="polite"></div>
+
+      <!-- Pagination Controls (Keeps page compact, prevents vertical clutter) -->
+      <nav id="paginationControls" class="pagination-bar card hidden" aria-label="Ideas pagination">
+        <div class="pagination-info">
+          <span id="pageInfoText" class="page-info-text font-pixel-label">Page 1 of 4 (Showing 1–3 of 10)</span>
+        </div>
+        <div class="pagination-buttons">
+          <button type="button" id="firstPageBtn" class="page-btn page-nav-btn" aria-label="First page">&laquo; First</button>
+          <button type="button" id="prevPageBtn" class="page-btn page-nav-btn" aria-label="Previous page">&lsaquo; Prev</button>
+          <div id="pageNumbersContainer" class="page-numbers-group" role="group" aria-label="Page numbers"></div>
+          <button type="button" id="nextPageBtn" class="page-btn page-nav-btn" aria-label="Next page">Next &rsaquo;</button>
+          <button type="button" id="lastPageBtn" class="page-btn page-nav-btn" aria-label="Last page">Last &raquo;</button>
+        </div>
+        <div class="page-size-picker">
+          <label for="pageSizeSelect" class="page-size-label">Per page:</label>
+          <select id="pageSizeSelect" class="page-size-select" aria-label="Ideas per page">
+            <option value="3" selected>3</option>
+            <option value="5">5</option>
+            <option value="10">10 (All)</option>
+          </select>
+        </div>
+      </nav>
+    </section>
+
+    <!-- 3. Right Sidebar (Desktop) / Lower Section: Recent Ideas Panel -->
+    <aside class="body-area-recent" id="recentSection" aria-labelledby="recent-heading">
+      <div class="card recent-card">
+        <div class="recent-header">
+          <h2 id="recent-heading">Recent Ideas</h2>
+          <button type="button" id="clearRecentBtn" class="btn-clear-recent" aria-label="Clear recent ideas history">(Clear)</button>
+        </div>
+        <p class="recent-subtitle">Last 5 submissions saved locally in your browser. Click any item to refill the form.</p>
+                <div id="recentEmpty" class="recent-empty-text">No recent ideas stored yet.</div>
+        <ul id="recentList" class="recent-items-list" aria-live="polite"></ul>
+      </div>
+
+      <!-- Coming Soon Card: Planned Features (Transparent roadmap) -->
+      <div class="card coming-soon-card" id="comingSoonCard" aria-labelledby="coming-soon-heading">
+        <div class="coming-soon-header">
+          <span class="badge-planned font-pixel-label" aria-hidden="true">[PLANNED]</span>
+          <h3 id="coming-soon-heading">Coming Soon</h3>
+        </div>
+        <p class="coming-soon-intro">Features planned for future releases (not currently active):</p>
+        <ul class="coming-soon-list">
+          <li>
+            <strong class="font-pixel-label">LIVE DUPLICATE SEARCH</strong>
+            <span>Deep code repository matching against GitHub, PyPI, and npm registries.</span>
+          </li>
+          <li>
+            <strong class="font-pixel-label">MULTI-MODEL ROUTING</strong>
+            <span>Toggle between fast flash models, local Ollama endpoints, and reasoning engines.</span>
+          </li>
+          <li>
+            <strong class="font-pixel-label">EXPORT TO DEVPOST</strong>
+            <span>One-click scaffold generator with README, presentation slides outline, and skeleton.</span>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- 4. Info Section: "What you get" (3 honest cards) -->
+    <section class="body-area-what-you-get card-group" id="whatYouGetSection" aria-labelledby="what-you-get-heading">
+      <h2 id="what-you-get-heading" class="section-title-full">What You Get</h2>
+      <div class="three-cards-grid">
+        <article class="info-card">
+          <div class="info-card-icon" aria-hidden="true">
+            <svg viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges">
+              <rect x="2" y="1" width="12" height="2" fill="#89cff0"/>
+              <rect x="2" y="13" width="12" height="2" fill="#89cff0"/>
+              <rect x="4" y="3" width="8" height="2" fill="#66bce6"/>
+              <rect x="6" y="5" width="4" height="2" fill="#66bce6"/>
+              <rect x="7" y="7" width="2" height="2" fill="#89cff0"/>
+              <rect x="6" y="9" width="4" height="2" fill="#66bce6"/>
+              <rect x="4" y="11" width="8" height="2" fill="#66bce6"/>
+            </svg>
+          </div>
+          <h3>Time Fit</h3>
+          <p>Ideas are scoped directly to the remaining hours you specify. The estimated hours are heuristic planning estimates, not guaranteed delivery milestones.</p>
+        </article>
+
+        <article class="info-card">
+          <div class="info-card-icon" aria-hidden="true">
+            <svg viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges">
+              <rect x="2" y="12" width="2" height="3" fill="#89cff0"/>
+              <rect x="5" y="8" width="2" height="7" fill="#89cff0"/>
+              <rect x="8" y="4" width="2" height="11" fill="#89cff0"/>
+              <rect x="11" y="2" width="2" height="13" fill="#89cff0"/>
+              <rect x="1" y="15" width="14" height="1" fill="#38bdf8"/>
+            </svg>
+          </div>
+          <h3>Visible Scoring</h3>
+          <p>Every ranking computes a weighted rubric across time fit, feasibility, team fit, demo style, and theme. Each criterion includes its score and one-sentence reason.</p>
+        </article>
+
+        <article class="info-card">
+          <div class="info-card-icon" aria-hidden="true">
+            <svg viewBox="0 0 16 16" width="32" height="32" shape-rendering="crispEdges">
+              <rect x="4" y="2" width="8" height="2" fill="#fbbf24"/>
+              <rect x="2" y="4" width="2" height="8" fill="#fbbf24"/>
+              <rect x="12" y="4" width="2" height="8" fill="#fbbf24"/>
+              <rect x="4" y="12" width="8" height="2" fill="#fbbf24"/>
+              <rect x="7" y="5" width="2" height="4" fill="#fbbf24"/>
+              <rect x="7" y="10" width="2" height="1" fill="#fbbf24"/>
+            </svg>
+          </div>
+          <h3>Duplicate Warnings</h3>
+          <p>Titles are checked against public GitHub repository records via title similarity. A potential match is an advisory warning to review prior art, not proof of copying.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 5. Info Section: "How scores work" (rubric table + honest disclaimer) -->
+    <section class="body-area-how-scores card" id="howScoresWorkSection" aria-labelledby="how-scores-heading">
+      <h2 id="how-scores-heading">How Scores Work</h2>
+      <p class="rubric-explainer">
+        Scores are heuristic estimates produced by an LLM evaluated against a fixed scoring rubric, with mathematical weighting and ranking computed deterministically by the Python backend. They are designed for ideation prioritization and are not guaranteed facts. Always evaluate team velocity and library setup independently before building.
+      </p>
+
+      <!-- Table read from backend constants (dynamically updated if API returns rubric_weights) -->
+      <!-- copy of the backend's constants, keep in sync -->
+      <div class="table-container">
+        <table class="rubric-table" aria-label="Hackathon Idea Scoring Rubric and Weights">
+          <thead>
+            <tr>
+              <th scope="col">Criterion</th>
+              <th scope="col">Weight</th>
+              <th scope="col">Evaluation Focus</th>
+            </tr>
+          </thead>
+          <tbody id="rubricTableBody">
+            <tr>
+              <th scope="row"><code>time_fit</code></th>
+              <td class="weight-cell" data-crit="time_fit">25% (0.25)</td>
+              <td>How realistically the minimum viable version (MVP) can be built within the hours entered.</td>
+            </tr>
+            <tr>
+              <th scope="row"><code>feasibility</code></th>
+              <td class="weight-cell" data-crit="feasibility">25% (0.25)</td>
+              <td>Realistic technical execution given the team skill level and preferred technology stack.</td>
+            </tr>
+            <tr>
+              <th scope="row"><code>team_fit</code></th>
+              <td class="weight-cell" data-crit="team_fit">20% (0.20)</td>
+              <td>How cleanly scope and parallel tasks divide across the specified number of developers.</td>
+            </tr>
+            <tr>
+              <th scope="row"><code>demo_fit</code></th>
+              <td class="weight-cell" data-crit="demo_fit">15% (0.15)</td>
+              <td>Alignment with the intended presentation format (live app, slides heavy, or data story).</td>
+            </tr>
+            <tr>
+              <th scope="row"><code>theme_fit</code></th>
+              <td class="weight-cell" data-crit="theme_fit">15% (0.15)</td>
+              <td>Direct connection to the hackathon track or theme (automatically scored 3 if no theme is given).</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+    <!-- ==============================================================================
+       Redesigned Footer (3-column layout + Buy Me a Coffee section)
+       ============================================================================== -->
+  <footer class="app-footer" id="appFooter">
+    <div class="footer-container">
+      <div class="footer-grid">
+        <!-- Col 1: About -->
+        <div class="footer-col footer-col-about">
+          <h3 class="footer-heading font-pixel-display">Hackpixel</h3>
+          <p class="footer-text">
+            Practical hackathon idea assistant providing scoped MVPs, tech stacks, and transparent rubric rankings for developer teams under tight deadlines.
+          </p>
+          <p class="footer-note">
+            <em>Notice: Scores and time estimations are heuristic guidance to assist team prioritization, not factual guarantees.</em>
+          </p>
+        </div>
+
+        <!-- Col 2: Links (Real links only) -->
+        <div class="footer-col footer-col-links">
+          <h3 class="footer-heading font-pixel-display">Documentation</h3>
+          <ul class="footer-links-list">
+            <li><a href="/README.md" class="footer-link">Project README &amp; Spec</a></li>
+            <li><a href="#howScoresWorkSection" class="footer-link">Scoring Rubric &amp; Weights</a></li>
+            <li><a href="#whatYouGetSection" class="footer-link">Architecture &amp; Features</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Support (Buy Me a Coffee) -->
+        <div class="footer-col footer-col-support">
+          <h3 class="footer-heading font-pixel-display">Support</h3>
+          <p class="footer-text">If this helped, you can support the project.</p>
+          <div class="bmc-container">
+            <div class="bmc-qr-wrapper">
+              <img src="/static/bmc-qr.svg" alt="QR code for the Buy Me a Coffee page" class="bmc-qr-img" width="112" height="112">
+            </div>
+            <div class="bmc-btn-wrapper">
+              <a href="#" id="bmcBtn" class="bmc-btn" target="_blank" rel="noopener noreferrer">
+                <span class="bmc-icon" aria-hidden="true">&#9749;</span> Buy me a coffee
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Bottom Bar -->
+      <div class="footer-bottom">
+        <p>&copy; <span id="copyrightYear"></span> Hackpixel. Built with FastAPI and vanilla JavaScript.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/static/js/helpers.js"></script>
+  <script src="/static/js/terrain.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>
