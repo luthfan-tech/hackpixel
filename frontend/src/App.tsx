@@ -27,7 +27,7 @@ export const App: React.FC = () => {
   const [ideas, setIdeas] = useState<IdeaItem[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [systemMode, setSystemMode] = useState<string>('Live Gemini')
-  const [modelName, setModelName] = useState<string>('gemini-2.5-flash')
+  const [modelName, setModelName] = useState<string>('gemini-3.5-flash')
   const [localCount, setLocalCount] = useState<number>(0)
   const [lastRunTime, setLastRunTime] = useState<string | null>(null)
   const [filterQuery, setFilterQuery] = useState('')

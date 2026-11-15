@@ -12,7 +12,7 @@ export const StatusStrip: React.FC<StatusStripProps> = ({
   systemMode,
   localCount,
   lastRunTime,
-  modelName = 'gemini-2.5-flash',
+  modelName = 'gemini-3.5-flash',
 }) => {
   const isLive = systemMode.toLowerCase().includes('live') || systemMode.toLowerCase().includes('gemini')
 

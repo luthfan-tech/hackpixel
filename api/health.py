@@ -20,8 +20,6 @@ app.add_middleware(
 )
 
 
-@app.get("/")
-@app.get("/api/health")
-@app.get("/health")
-def handle_health():
-    return {"status": "ok"}
+@app.api_route("/{full_path:path}", methods=["GET"])
+def handle_health_catchall(full_path: str):
+    return {"status": "ok", "path": full_path}
