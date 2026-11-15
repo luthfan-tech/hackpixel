@@ -1,5 +1,6 @@
-from typing import List
-from app.schemas import IdeaCard, IdeaResponse
+import copy
+from typing import List, Optional
+from app.schemas import HackathonInput, IdeaCard, IdeaResponse
 
 MOCK_IDEA_CARDS: List[IdeaCard] = [
     IdeaCard(
@@ -185,9 +186,40 @@ MOCK_IDEA_CARDS: List[IdeaCard] = [
 ]
 
 
-def get_mock_idea_response() -> IdeaResponse:
-    """Returns exactly 10 mock IdeaCards clearly labeled as mock data."""
+def get_mock_idea_response(user_input: Optional[HackathonInput] = None) -> IdeaResponse:
+    """Returns exactly 10 mock IdeaCards clearly labeled as mock data, dynamically adapted to user constraints if provided."""
+    cards = copy.deepcopy(MOCK_IDEA_CARDS)
+
+    if user_input is not None:
+        target_hours = max(user_input.hours_remaining, 1.0)
+        user_stack = user_input.preferred_stack or []
+        user_theme = user_input.theme.strip() if user_input.theme else None
+
+        for idx, card in enumerate(cards):
+            # Scale estimated hours proportionally to user's remaining time (e.g. 25% to 75% of total time)
+            hour_fraction = 0.2 + (idx % 5) * 0.12
+            card.estimated_hours = round(max(0.5, target_hours * hour_fraction), 1)
+
+            # Incorporate user's preferred stack
+            if user_stack:
+                primary_tech = user_stack[idx % len(user_stack)]
+                if primary_tech not in card.stack:
+                    card.stack = [primary_tech] + [t for t in card.stack if t != primary_tech][:3]
+
+            # Incorporate user's custom theme
+            if user_theme:
+                card.scores["theme_fit"] = 5
+                card.score_explanations["theme_fit"] = f"Tailored specifically for the '{user_theme}' hackathon track."
+                card.one_line_pitch = f"[{user_theme}] " + card.one_line_pitch
+
+            # Update time_fit explanation with actual hours
+            card.score_explanations["time_fit"] = (
+                f"Estimated at {card.estimated_hours} hours, fitting comfortably within your {user_input.hours_remaining}h window."
+            )
+            if "team_fit" in card.score_explanations:
+                card.score_explanations["team_fit"] = f"Scoped for a team of {user_input.team_size} developers."
+
     return IdeaResponse(
-        ideas=MOCK_IDEA_CARDS,
-        notes="MOCK DATA: These 10 ideas were generated from pre-configured example data because USE_MOCK_LLM is enabled. No external LLM API was called.",
+        ideas=cards,
+        notes="MOCK DATA: These 10 ideas were generated from example blueprints adapted to your custom constraints.",
     )

@@ -322,7 +322,7 @@ export const App: React.FC = () => {
                   No ideas generated yet
                 </h3>
                 <p className="text-sm text-[#424245] max-w-sm mx-auto font-body">
-                  Select an <strong className="text-[#1D1D1F]">Architecture Preset</strong> on the left and hit generate to view 10 scored ideas.
+                  Set your custom <strong className="text-[#1D1D1F]">hours, team, and stack</strong> on the left, then click Generate to get 10 scoped ideas.
                 </p>
               </div>
             )}

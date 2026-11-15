@@ -68,7 +68,7 @@ def generate_ideas(
     """
     # Use mock data if enabled and no custom client is explicitly injected
     if client is None and USE_MOCK_LLM:
-        response = get_mock_idea_response()
+        response = get_mock_idea_response(user_input)
     else:
         active_client = client or LLMClient()
         prompt = build_idea_prompt(user_input)

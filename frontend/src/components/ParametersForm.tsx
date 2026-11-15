@@ -127,27 +127,39 @@ export const ParametersForm: React.FC<ParametersFormProps> = ({ onSubmit, isLoad
     theme: '',
   })
 
+  const [hoursInput, setHoursInput] = useState<string>('24')
+  const [teamSizeInput, setTeamSizeInput] = useState<string>('3')
   const [activePreset, setActivePreset] = useState<string | null>('jamstack')
   const [validationError, setValidationError] = useState<string | null>(null)
 
   const handleApplyPreset = (preset: typeof ARCHITECTURE_PRESETS[0]) => {
     setActivePreset(preset.id)
     setFormData(preset.data)
+    setHoursInput(preset.data.hours_remaining.toString())
+    setTeamSizeInput(preset.data.team_size.toString())
     setValidationError(null)
   }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (formData.hours_remaining <= 0 || formData.hours_remaining > 1000) {
-      setValidationError('Hours remaining must be between 0.1 and 1000.')
+    const parsedHours = parseFloat(hoursInput)
+    const parsedTeam = parseInt(teamSizeInput, 10)
+
+    if (isNaN(parsedHours) || parsedHours <= 0 || parsedHours > 1000) {
+      setValidationError('Please enter a valid remaining time between 0.5 and 1000 hours.')
       return
     }
-    if (formData.team_size < 1 || formData.team_size > 6) {
+    if (isNaN(parsedTeam) || parsedTeam < 1 || parsedTeam > 6) {
       setValidationError('Team size must be between 1 and 6 developers.')
       return
     }
+
     setValidationError(null)
-    onSubmit(formData)
+    onSubmit({
+      ...formData,
+      hours_remaining: parsedHours,
+      team_size: parsedTeam,
+    })
   }
 
   return (
@@ -158,15 +170,26 @@ export const ParametersForm: React.FC<ParametersFormProps> = ({ onSubmit, isLoad
           <span>Hackathon Constraints</span>
         </h2>
         <p className="text-sm text-[#424245] font-body">
-          Set your constraints to generate and rank 10 feasible ideas.
+          Choose any timing, theme, and stack, or pick a template below.
         </p>
       </div>
 
       {/* Quick Architecture Presets */}
       <div className="mb-6 rounded-xl border border-slate-200 bg-[#F5F5F7] p-3.5 space-y-2.5">
-        <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#007AFF] block">
-          ⚡ Architecture Presets
-        </span>
+        <div className="flex items-center justify-between">
+          <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#007AFF] block">
+            ⚡ Quick-Start Templates (Optional)
+          </span>
+          {activePreset ? (
+            <span className="text-xs font-mono text-[#007AFF] bg-blue-100/60 px-2.5 py-0.5 rounded-md font-semibold">
+              Template: {activePreset}
+            </span>
+          ) : (
+            <span className="text-xs font-mono text-emerald-700 bg-emerald-100/70 px-2.5 py-0.5 rounded-md font-bold">
+              ✓ Custom Parameters Active
+            </span>
+          )}
+        </div>
         <div className="flex flex-wrap gap-2">
           {ARCHITECTURE_PRESETS.map((p) => {
             const Icon = p.icon
@@ -210,10 +233,14 @@ export const ParametersForm: React.FC<ParametersFormProps> = ({ onSubmit, isLoad
               min="0.5"
               max="1000"
               step="0.5"
-              value={formData.hours_remaining}
+              value={hoursInput}
               onChange={(e) => {
                 setActivePreset(null)
-                setFormData({ ...formData, hours_remaining: parseFloat(e.target.value) || 0 })
+                setHoursInput(e.target.value)
+                const val = parseFloat(e.target.value)
+                if (!isNaN(val)) {
+                  setFormData((prev) => ({ ...prev, hours_remaining: val }))
+                }
               }}
               required
               className="w-full rounded-xl border border-slate-200 bg-[#F5F5F7] px-3.5 py-2.5 text-base text-[#1D1D1F] font-mono focus:bg-white focus:border-[#007AFF] focus:outline-hidden transition-colors"
@@ -229,10 +256,14 @@ export const ParametersForm: React.FC<ParametersFormProps> = ({ onSubmit, isLoad
               type="number"
               min="1"
               max="6"
-              value={formData.team_size}
+              value={teamSizeInput}
               onChange={(e) => {
                 setActivePreset(null)
-                setFormData({ ...formData, team_size: parseInt(e.target.value, 10) || 1 })
+                setTeamSizeInput(e.target.value)
+                const val = parseInt(e.target.value, 10)
+                if (!isNaN(val)) {
+                  setFormData((prev) => ({ ...prev, team_size: val }))
+                }
               }}
               required
               className="w-full rounded-xl border border-slate-200 bg-[#F5F5F7] px-3.5 py-2.5 text-base text-[#1D1D1F] font-mono focus:bg-white focus:border-[#007AFF] focus:outline-hidden transition-colors"

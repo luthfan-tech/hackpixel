@@ -1,7 +1,8 @@
 import React from 'react'
-import { Coffee, ExternalLink, ShieldCheck, FileText, Activity } from 'lucide-react'
+import { Coffee, ExternalLink, ShieldCheck, FileText, Activity, Code2 } from 'lucide-react'
 
 const BMC_URL = "https://buymeacoffee.com/luthfanmakl"
+const GITHUB_REPO_URL = "https://github.com/luthfan-tech/hackpixel"
 
 export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear()
@@ -35,28 +36,33 @@ export const Footer: React.FC = () => {
             </p>
           </div>
 
-          {/* Col 2: Documentation & Spec Links (3 cols) */}
+          {/* Col 2: Source Code & Resources (3 cols) */}
           <div className="md:col-span-3 space-y-3">
             <h4 className="font-heading font-bold text-sm uppercase tracking-wider text-[#1D1D1F]">
-              Documentation &amp; API
+              Source Code
             </h4>
             <ul className="space-y-2.5 text-sm font-body">
               <li>
                 <a 
-                  href="/README.md" 
+                  href={GITHUB_REPO_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-[#505054] hover:text-[#007AFF] transition-colors flex items-center gap-2"
                 >
-                  <FileText className="w-4 h-4 text-slate-400" />
-                  <span>Project README &amp; Spec</span>
+                  <Code2 className="w-4 h-4 text-[#007AFF]" />
+                  <span>GitHub Repository</span>
+                  <ExternalLink className="w-3 h-3 text-slate-400" />
                 </a>
               </li>
               <li>
                 <a 
-                  href="/health" 
+                  href={`${GITHUB_REPO_URL}#readme`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-[#505054] hover:text-[#007AFF] transition-colors flex items-center gap-2"
                 >
-                  <Activity className="w-4 h-4 text-slate-400" />
-                  <span>API Health Check</span>
+                  <FileText className="w-4 h-4 text-slate-400" />
+                  <span>Architecture Spec &amp; README</span>
                 </a>
               </li>
               <li>
@@ -65,7 +71,16 @@ export const Footer: React.FC = () => {
                   className="text-[#505054] hover:text-[#007AFF] transition-colors flex items-center gap-2"
                 >
                   <ShieldCheck className="w-4 h-4 text-slate-400" />
-                  <span>Safe Config Telemetry</span>
+                  <span>System Telemetry</span>
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="/health" 
+                  className="text-[#505054] hover:text-[#007AFF] transition-colors flex items-center gap-2"
+                >
+                  <Activity className="w-4 h-4 text-slate-400" />
+                  <span>Service Health Check</span>
                 </a>
               </li>
             </ul>
@@ -118,6 +133,11 @@ export const Footer: React.FC = () => {
                 </div>
               </div>
             </div>
+
+            {/* Small & Professional Footer Note below Buy Me A Coffee */}
+            <p className="pt-2 text-xs text-[#6E6E73] font-body border-t border-slate-200/80 leading-relaxed">
+              Open-source developer utility built to help engineers, students, and teams build resilient hackathon projects on deadline.
+            </p>
           </div>
         </div>
 
