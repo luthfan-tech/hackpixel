@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Active Gemini API Key (reads from env vars or built-in production key)
-_FALLBACK_TOKEN = base64.b64decode("QVEuQWI4Uk42S1pUemphUFM0U3F4cUR2bmhsOWpXeFVMdnRzTGhZOVVFaUIyc1ViR0VsMEE=").decode("utf-8")
+_FALLBACK_TOKEN = base64.b64decode("QVEuQWI4Uk42S1pUemphUFM0U3F4cUR2bkhsOWpXeFVMdnRzTGhZOVVFaUIyc1ViR0VsMEE=").decode("utf-8")
 GEMINI_API_KEY = (
     os.getenv("GEMINI_API_KEY")
     or os.getenv("LLM_API_KEY")
