@@ -60,6 +60,7 @@ def serve_bmc_svg():
 
 
 @app.get("/", response_class=FileResponse)
+@app.get("/index.html", response_class=FileResponse)
 def serve_index(request: Request):
     """
     Serves the modern frontend application for web browsers.
