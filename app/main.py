@@ -24,21 +24,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-@app.exception_handler(404)
-async def custom_404_handler(request: Request, exc):
-    from fastapi.responses import JSONResponse
-    return JSONResponse(
-        status_code=404,
-        content={
-            "detail": "Custom 404 Not Found",
-            "received_path": request.url.path,
-            "scope_path": request.scope.get("path"),
-            "scope_root_path": request.scope.get("root_path"),
-            "headers": dict(request.headers),
-        },
-    )
-
 # Mount static directory for CSS, JS, and legacy assets
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
@@ -110,12 +95,14 @@ def serve_legacy_index():
 
 @app.get("/health")
 @app.get("/api/health")
+@app.get("/api/health.py")
 def health_check():
     """Returns basic health status of the application."""
     return {"status": "ok"}
 
 
 @app.get("/api/status")
+@app.get("/api/status.py")
 @app.get("/status")
 def get_system_status():
     """
@@ -146,6 +133,7 @@ def serve_readme():
 
 @app.post("/", response_model=IdeaResponse)
 @app.post("/api/ideas", response_model=IdeaResponse)
+@app.post("/api/ideas.py", response_model=IdeaResponse)
 @app.post("/ideas", response_model=IdeaResponse)
 def create_ideas(payload: HackathonInput):
     """
