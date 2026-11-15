@@ -138,7 +138,7 @@ export const Hero3DLaptop: React.FC<Hero3DLaptopProps> = ({ className = '' }) =>
       sCtx.fillText('> SYS.READY --target="hackathon_assistant"', 48, 105)
 
       sCtx.fillStyle = '#38bdf8'
-      sCtx.fillText('> AI INFERENCE: GOOGLE GEMINI 2.5 FLASH [ONLINE]', 48, 148)
+      sCtx.fillText('> AI INFERENCE: GOOGLE GEMINI 3.5 FLASH [ONLINE]', 48, 148)
 
       sCtx.font = '20px monospace'
       sCtx.fillStyle = '#f5f5f7'

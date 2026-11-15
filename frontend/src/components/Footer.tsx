@@ -144,10 +144,10 @@ export const Footer: React.FC = () => {
         {/* Bottom Bar: Copyright & Info */}
         <div className="pt-8 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-[#6E6E73] font-body">
           <p>
-            &copy; <span id="copyrightYear">{currentYear}</span> Hackpixel. Built with Next.js/Vite, React 19, Tailwind CSS v4, and Google Gemini 2.5.
+            &copy; <span id="copyrightYear">{currentYear}</span> Hackpixel. All rights reserved.
           </p>
-          <p className="font-mono text-xs text-[#6E6E73]">
-            Apple Modern Palette // WCAG AAA Compliant // Open Heuristic Rubrics
+          <p className="text-xs text-[#6E6E73] font-body">
+            Empowering developers to scope, build, and ship winning projects on time.
           </p>
         </div>
       </div>
