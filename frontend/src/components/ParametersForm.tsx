@@ -151,23 +151,23 @@ export const ParametersForm: React.FC<ParametersFormProps> = ({ onSubmit, isLoad
   }
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-7 shadow-sm">
       <div className="mb-6 space-y-1">
-        <h2 className="font-heading text-xl font-bold tracking-tight text-[#1D1D1F] flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-[#007AFF]" />
+        <h2 className="font-heading text-2xl font-black tracking-tight text-[#1D1D1F] flex items-center gap-2.5">
+          <Sparkles className="w-6 h-6 text-[#007AFF]" />
           <span>Hackathon Constraints</span>
         </h2>
-        <p className="text-xs text-[#6E6E73] font-body">
+        <p className="text-sm text-[#424245] font-body">
           Set your constraints to generate and rank 10 feasible ideas.
         </p>
       </div>
 
       {/* Quick Architecture Presets */}
-      <div className="mb-6 rounded-xl border border-slate-200 bg-[#F5F5F7] p-3 space-y-2">
-        <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#007AFF] block">
+      <div className="mb-6 rounded-xl border border-slate-200 bg-[#F5F5F7] p-3.5 space-y-2.5">
+        <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#007AFF] block">
           ⚡ Architecture Presets
         </span>
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap gap-2">
           {ARCHITECTURE_PRESETS.map((p) => {
             const Icon = p.icon
             const isSelected = activePreset === p.id
@@ -176,14 +176,14 @@ export const ParametersForm: React.FC<ParametersFormProps> = ({ onSubmit, isLoad
                 key={p.id}
                 type="button"
                 onClick={() => handleApplyPreset(p)}
-                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-medium border transition-all cursor-pointer ${
+                className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-mono font-semibold border transition-all cursor-pointer ${
                   isSelected
                     ? 'bg-[#007AFF] text-white border-[#007AFF] shadow-xs'
                     : 'bg-white text-[#1D1D1F] border-slate-200 hover:border-slate-300 hover:bg-slate-50'
                 }`}
                 title={p.description}
               >
-                <Icon className={`w-3.5 h-3.5 ${isSelected ? 'text-white' : 'text-[#007AFF]'}`} />
+                <Icon className={`w-4 h-4 ${isSelected ? 'text-white' : 'text-[#007AFF]'}`} />
                 <span>{p.name}</span>
               </button>
             )
@@ -192,17 +192,17 @@ export const ParametersForm: React.FC<ParametersFormProps> = ({ onSubmit, isLoad
       </div>
 
       {validationError && (
-        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-xs text-red-600 font-mono">
+        <div className="mb-4 rounded-xl border border-red-200 bg-red-50 p-3.5 text-sm text-red-600 font-mono font-medium">
           {validationError}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
         {/* Hours & Team Size Grid */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-3.5">
           <div className="space-y-1.5">
-            <label className="flex items-center gap-1.5 text-xs font-semibold text-[#1D1D1F]">
-              <Clock className="w-3.5 h-3.5 text-[#007AFF]" />
+            <label className="flex items-center gap-1.5 text-sm font-bold text-[#1D1D1F]">
+              <Clock className="w-4 h-4 text-[#007AFF]" />
               <span>Hours Left *</span>
             </label>
             <input
@@ -216,13 +216,13 @@ export const ParametersForm: React.FC<ParametersFormProps> = ({ onSubmit, isLoad
                 setFormData({ ...formData, hours_remaining: parseFloat(e.target.value) || 0 })
               }}
               required
-              className="w-full rounded-xl border border-slate-200 bg-[#F5F5F7] px-3 py-2 text-sm text-[#1D1D1F] font-mono focus:bg-white focus:border-[#007AFF] focus:outline-hidden transition-colors"
+              className="w-full rounded-xl border border-slate-200 bg-[#F5F5F7] px-3.5 py-2.5 text-base text-[#1D1D1F] font-mono focus:bg-white focus:border-[#007AFF] focus:outline-hidden transition-colors"
             />
           </div>
 
           <div className="space-y-1.5">
-            <label className="flex items-center gap-1.5 text-xs font-semibold text-[#1D1D1F]">
-              <Users className="w-3.5 h-3.5 text-[#007AFF]" />
+            <label className="flex items-center gap-1.5 text-sm font-bold text-[#1D1D1F]">
+              <Users className="w-4 h-4 text-[#007AFF]" />
               <span>Team Size *</span>
             </label>
             <input
@@ -235,15 +235,15 @@ export const ParametersForm: React.FC<ParametersFormProps> = ({ onSubmit, isLoad
                 setFormData({ ...formData, team_size: parseInt(e.target.value, 10) || 1 })
               }}
               required
-              className="w-full rounded-xl border border-slate-200 bg-[#F5F5F7] px-3 py-2 text-sm text-[#1D1D1F] font-mono focus:bg-white focus:border-[#007AFF] focus:outline-hidden transition-colors"
+              className="w-full rounded-xl border border-slate-200 bg-[#F5F5F7] px-3.5 py-2.5 text-base text-[#1D1D1F] font-mono focus:bg-white focus:border-[#007AFF] focus:outline-hidden transition-colors"
             />
           </div>
         </div>
 
         {/* Skill Level */}
         <div className="space-y-1.5">
-          <label className="flex items-center gap-1.5 text-xs font-semibold text-[#1D1D1F]">
-            <Activity className="w-3.5 h-3.5 text-[#007AFF]" />
+          <label className="flex items-center gap-1.5 text-sm font-bold text-[#1D1D1F]">
+            <Activity className="w-4 h-4 text-[#007AFF]" />
             <span>Skill Level *</span>
           </label>
           <div className="grid grid-cols-3 gap-2 p-1 rounded-xl bg-[#F5F5F7] border border-slate-200">
@@ -255,9 +255,9 @@ export const ParametersForm: React.FC<ParametersFormProps> = ({ onSubmit, isLoad
                   setActivePreset(null)
                   setFormData({ ...formData, skill_level: level })
                 }}
-                className={`py-1.5 rounded-lg text-xs font-medium capitalize transition-all cursor-pointer ${
+                className={`py-2 rounded-lg text-sm font-semibold capitalize transition-all cursor-pointer ${
                   formData.skill_level === level
-                    ? 'bg-[#007AFF] text-white shadow-xs font-semibold'
+                    ? 'bg-[#007AFF] text-white shadow-xs'
                     : 'text-[#6E6E73] hover:text-[#1D1D1F]'
                 }`}
               >
@@ -269,8 +269,8 @@ export const ParametersForm: React.FC<ParametersFormProps> = ({ onSubmit, isLoad
 
         {/* Tone */}
         <div className="space-y-1.5">
-          <label className="flex items-center gap-1.5 text-xs font-semibold text-[#1D1D1F]">
-            <Smile className="w-3.5 h-3.5 text-[#007AFF]" />
+          <label className="flex items-center gap-1.5 text-sm font-bold text-[#1D1D1F]">
+            <Smile className="w-4 h-4 text-[#007AFF]" />
             <span>Project Tone *</span>
           </label>
           <div className="grid grid-cols-3 gap-2 p-1 rounded-xl bg-[#F5F5F7] border border-slate-200">
@@ -282,9 +282,9 @@ export const ParametersForm: React.FC<ParametersFormProps> = ({ onSubmit, isLoad
                   setActivePreset(null)
                   setFormData({ ...formData, tone })
                 }}
-                className={`py-1.5 rounded-lg text-xs font-medium capitalize transition-all cursor-pointer ${
+                className={`py-2 rounded-lg text-sm font-semibold capitalize transition-all cursor-pointer ${
                   formData.tone === tone
-                    ? 'bg-[#007AFF] text-white shadow-xs font-semibold'
+                    ? 'bg-[#007AFF] text-white shadow-xs'
                     : 'text-[#6E6E73] hover:text-[#1D1D1F]'
                 }`}
               >
@@ -296,8 +296,8 @@ export const ParametersForm: React.FC<ParametersFormProps> = ({ onSubmit, isLoad
 
         {/* Demo Style */}
         <div className="space-y-1.5">
-          <label className="flex items-center gap-1.5 text-xs font-semibold text-[#1D1D1F]">
-            <Monitor className="w-3.5 h-3.5 text-[#007AFF]" />
+          <label className="flex items-center gap-1.5 text-sm font-bold text-[#1D1D1F]">
+            <Monitor className="w-4 h-4 text-[#007AFF]" />
             <span>Target Demo Style *</span>
           </label>
           <div className="grid grid-cols-2 gap-2 p-1 rounded-xl bg-[#F5F5F7] border border-slate-200">
@@ -314,9 +314,9 @@ export const ParametersForm: React.FC<ParametersFormProps> = ({ onSubmit, isLoad
                   setActivePreset(null)
                   setFormData({ ...formData, demo_style: d.id as any })
                 }}
-                className={`py-1.5 px-2 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+                className={`py-2 px-2.5 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
                   formData.demo_style === d.id
-                    ? 'bg-[#007AFF] text-white shadow-xs font-semibold'
+                    ? 'bg-[#007AFF] text-white shadow-xs'
                     : 'text-[#6E6E73] hover:text-[#1D1D1F]'
                 }`}
               >
@@ -328,8 +328,8 @@ export const ParametersForm: React.FC<ParametersFormProps> = ({ onSubmit, isLoad
 
         {/* Risk Appetite */}
         <div className="space-y-1.5">
-          <label className="flex items-center gap-1.5 text-xs font-semibold text-[#1D1D1F]">
-            <Compass className="w-3.5 h-3.5 text-[#007AFF]" />
+          <label className="flex items-center gap-1.5 text-sm font-bold text-[#1D1D1F]">
+            <Compass className="w-4 h-4 text-[#007AFF]" />
             <span>Risk Appetite *</span>
           </label>
           <div className="grid grid-cols-3 gap-2 p-1 rounded-xl bg-[#F5F5F7] border border-slate-200">
@@ -341,9 +341,9 @@ export const ParametersForm: React.FC<ParametersFormProps> = ({ onSubmit, isLoad
                   setActivePreset(null)
                   setFormData({ ...formData, risk_appetite: risk })
                 }}
-                className={`py-1.5 rounded-lg text-xs font-medium capitalize transition-all cursor-pointer ${
+                className={`py-2 rounded-lg text-sm font-semibold capitalize transition-all cursor-pointer ${
                   formData.risk_appetite === risk
-                    ? 'bg-[#007AFF] text-white shadow-xs font-semibold'
+                    ? 'bg-[#007AFF] text-white shadow-xs'
                     : 'text-[#6E6E73] hover:text-[#1D1D1F]'
                 }`}
               >
@@ -355,8 +355,8 @@ export const ParametersForm: React.FC<ParametersFormProps> = ({ onSubmit, isLoad
 
         {/* Preferred Stack */}
         <div className="space-y-1.5">
-          <label className="flex items-center gap-1.5 text-xs font-semibold text-[#1D1D1F]">
-            <Layers className="w-3.5 h-3.5 text-[#007AFF]" />
+          <label className="flex items-center gap-1.5 text-sm font-bold text-[#1D1D1F]">
+            <Layers className="w-4 h-4 text-[#007AFF]" />
             <span>Preferred Stack (Comma-separated)</span>
           </label>
           <input
@@ -367,14 +367,14 @@ export const ParametersForm: React.FC<ParametersFormProps> = ({ onSubmit, isLoad
               setActivePreset(null)
               setFormData({ ...formData, preferred_stack: e.target.value })
             }}
-            className="w-full rounded-xl border border-slate-200 bg-[#F5F5F7] px-3 py-2 text-sm text-[#1D1D1F] placeholder:text-[#86868B] focus:bg-white focus:border-[#007AFF] focus:outline-hidden transition-colors"
+            className="w-full rounded-xl border border-slate-200 bg-[#F5F5F7] px-3.5 py-2.5 text-base text-[#1D1D1F] placeholder:text-[#86868B] focus:bg-white focus:border-[#007AFF] focus:outline-hidden transition-colors font-mono"
           />
         </div>
 
         {/* Theme */}
         <div className="space-y-1.5">
-          <label className="flex items-center gap-1.5 text-xs font-semibold text-[#1D1D1F]">
-            <Target className="w-3.5 h-3.5 text-[#007AFF]" />
+          <label className="flex items-center gap-1.5 text-sm font-bold text-[#1D1D1F]">
+            <Target className="w-4 h-4 text-[#007AFF]" />
             <span>Theme / Track (Optional)</span>
           </label>
           <input
@@ -385,7 +385,7 @@ export const ParametersForm: React.FC<ParametersFormProps> = ({ onSubmit, isLoad
               setActivePreset(null)
               setFormData({ ...formData, theme: e.target.value })
             }}
-            className="w-full rounded-xl border border-slate-200 bg-[#F5F5F7] px-3 py-2 text-sm text-[#1D1D1F] placeholder:text-[#86868B] focus:bg-white focus:border-[#007AFF] focus:outline-hidden transition-colors"
+            className="w-full rounded-xl border border-slate-200 bg-[#F5F5F7] px-3.5 py-2.5 text-base text-[#1D1D1F] placeholder:text-[#86868B] focus:bg-white focus:border-[#007AFF] focus:outline-hidden transition-colors"
           />
         </div>
 
@@ -393,16 +393,16 @@ export const ParametersForm: React.FC<ParametersFormProps> = ({ onSubmit, isLoad
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-[#007AFF] hover:bg-[#0066d6] text-white font-heading font-bold text-sm py-3 px-4 shadow-md transition-all disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer active:scale-[0.99]"
+          className="w-full mt-3 inline-flex items-center justify-center gap-2.5 rounded-xl bg-[#007AFF] hover:bg-[#0066d6] text-white font-heading font-black text-base py-3.5 px-5 shadow-md transition-all disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer active:scale-[0.99]"
         >
           {isLoading ? (
             <>
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
               <span>Generating &amp; Ranking 10 Ideas...</span>
             </>
           ) : (
             <>
-              <Sparkles className="w-4 h-4" />
+              <Sparkles className="w-5 h-5" />
               <span>Generate 10 Scoped Ideas</span>
             </>
           )}

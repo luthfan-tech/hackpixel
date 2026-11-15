@@ -177,29 +177,74 @@ export const Hero3DLaptop: React.FC<Hero3DLaptopProps> = ({ className = '' }) =>
       map: screenTexture,
     })
 
-    // 5. Laptop 3D Mesh Assembly
+    // 5. Laptop 3D Mesh Assembly with Smooth Curved Edges & Full Unibody Contours
     const laptopGroup = new THREE.Group()
 
-    // A. Base Chassis (Bottom Half)
+    // Helper to create rounded 2D shape in X-Y plane
+    const createRoundedShape = (w: number, d: number, r: number) => {
+      const shape = new THREE.Shape()
+      const x = -w / 2
+      const y = -d / 2
+      const radius = Math.min(r, w / 2, d / 2)
+      shape.moveTo(x + radius, y)
+      shape.lineTo(x + w - radius, y)
+      shape.quadraticCurveTo(x + w, y, x + w, y + radius)
+      shape.lineTo(x + w, y + d - radius)
+      shape.quadraticCurveTo(x + w, y + d, x + w - radius, y + d)
+      shape.lineTo(x + radius, y + d)
+      shape.quadraticCurveTo(x, y + d, x, y + d - radius)
+      shape.lineTo(x, y + radius)
+      shape.quadraticCurveTo(x, y, x + radius, y)
+      return shape
+    }
+
+    // A. Base Chassis (Bottom Half) — Smooth Curved Unibody
     const baseWidth = 2.45
-    const baseHeight = 0.08
     const baseDepth = 1.62
-    const baseGeometry = new THREE.BoxGeometry(baseWidth, baseHeight, baseDepth)
+    const baseShape = createRoundedShape(baseWidth, baseDepth, 0.12)
+    const baseGeometry = new THREE.ExtrudeGeometry(baseShape, {
+      depth: 0.048,
+      bevelEnabled: true,
+      bevelSegments: 5,
+      steps: 1,
+      bevelSize: 0.018,
+      bevelThickness: 0.016,
+    })
+    baseGeometry.center()
+    baseGeometry.rotateX(Math.PI / 2)
     const baseMesh = new THREE.Mesh(baseGeometry, chassisMaterial)
     baseMesh.castShadow = true
     baseMesh.receiveShadow = true
     laptopGroup.add(baseMesh)
 
-    // Sleek Electric Blue perimeter line under chassis
-    const trimGeo = new THREE.BoxGeometry(baseWidth + 0.02, 0.015, baseDepth + 0.02)
+    // Sleek Electric Blue curved perimeter line under chassis
+    const trimShape = createRoundedShape(baseWidth + 0.03, baseDepth + 0.03, 0.125)
+    const trimGeo = new THREE.ExtrudeGeometry(trimShape, {
+      depth: 0.012,
+      bevelEnabled: true,
+      bevelSegments: 3,
+      bevelSize: 0.005,
+      bevelThickness: 0.005,
+    })
+    trimGeo.center()
+    trimGeo.rotateX(Math.PI / 2)
     const trimMesh = new THREE.Mesh(trimGeo, edgeTrimMaterial)
-    trimMesh.position.set(0, -0.038, 0)
+    trimMesh.position.set(0, -0.042, 0)
     laptopGroup.add(trimMesh)
 
-    // Keyboard well indent
-    const wellGeometry = new THREE.BoxGeometry(2.15, 0.02, 0.92)
+    // Keyboard well indent with soft rounded corners
+    const wellShape = createRoundedShape(2.16, 0.94, 0.05)
+    const wellGeometry = new THREE.ExtrudeGeometry(wellShape, {
+      depth: 0.014,
+      bevelEnabled: true,
+      bevelSegments: 2,
+      bevelSize: 0.004,
+      bevelThickness: 0.004,
+    })
+    wellGeometry.center()
+    wellGeometry.rotateX(Math.PI / 2)
     const wellMesh = new THREE.Mesh(wellGeometry, keyboardWellMaterial)
-    wellMesh.position.set(0, 0.041, -0.15)
+    wellMesh.position.set(0, 0.042, -0.15)
     laptopGroup.add(wellMesh)
 
     // Keyboard Keys Grid
@@ -223,30 +268,49 @@ export const Hero3DLaptop: React.FC<Hero3DLaptopProps> = ({ className = '' }) =>
     }
     laptopGroup.add(keysGroup)
 
-    // Trackpad
-    const trackpadGeo = new THREE.BoxGeometry(0.72, 0.006, 0.46)
+    // Trackpad with rounded corners
+    const trackpadShape = createRoundedShape(0.74, 0.48, 0.04)
+    const trackpadGeo = new THREE.ExtrudeGeometry(trackpadShape, {
+      depth: 0.006,
+      bevelEnabled: true,
+      bevelSegments: 2,
+      bevelSize: 0.003,
+      bevelThickness: 0.003,
+    })
+    trackpadGeo.center()
+    trackpadGeo.rotateX(Math.PI / 2)
     const trackpadMesh = new THREE.Mesh(trackpadGeo, trackpadMaterial)
-    trackpadMesh.position.set(0, 0.042, 0.5)
+    trackpadMesh.position.set(0, 0.043, 0.5)
     laptopGroup.add(trackpadMesh)
 
-    // B. Screen Lid (Top Half with Hinge) — Exactly 90 Degrees Upright!
+    // B. Screen Lid (Top Half with Hinge) — Curvy Rounded Corners, 90 Degrees Upright!
     const lidGroup = new THREE.Group()
     lidGroup.position.set(0, 0.04, -0.81) // Hinge position at back edge
 
     const lidWidth = 2.45
     const lidHeight = 1.58
-    const lidThickness = 0.05
-    const lidGeometry = new THREE.BoxGeometry(lidWidth, lidHeight, lidThickness)
+    const lidShape = createRoundedShape(lidWidth, lidHeight, 0.12)
+    const lidGeometry = new THREE.ExtrudeGeometry(lidShape, {
+      depth: 0.028,
+      bevelEnabled: true,
+      bevelSegments: 5,
+      steps: 1,
+      bevelSize: 0.014,
+      bevelThickness: 0.014,
+    })
+    lidGeometry.center()
     const lidMesh = new THREE.Mesh(lidGeometry, bezelMaterial)
     lidMesh.position.set(0, lidHeight / 2, 0)
     lidGroup.add(lidMesh)
 
-    // Screen display panel
-    const screenPanelWidth = 2.26
-    const screenPanelHeight = 1.41
-    const screenGeometry = new THREE.PlaneGeometry(screenPanelWidth, screenPanelHeight)
+    // Screen display panel with rounded corners matching the bezel
+    const screenPanelWidth = 2.28
+    const screenPanelHeight = 1.42
+    const screenPanelShape = createRoundedShape(screenPanelWidth, screenPanelHeight, 0.06)
+    const screenGeometry = new THREE.ShapeGeometry(screenPanelShape)
+    screenGeometry.center()
     const screenMesh = new THREE.Mesh(screenGeometry, screenMaterial)
-    screenMesh.position.set(0, lidHeight / 2, 0.026)
+    screenMesh.position.set(0, lidHeight / 2, 0.03)
     lidGroup.add(screenMesh)
 
     // Exactly 90-degree upright open angle (perpendicular to base deck)
@@ -375,12 +439,12 @@ export const Hero3DLaptop: React.FC<Hero3DLaptopProps> = ({ className = '' }) =>
         className="relative z-10 w-full h-full cursor-grab active:cursor-grabbing"
       />
 
-      {/* Prominent Brand Title IN FRONT of the 3D Floating Laptop (z-20) */}
+      {/* Prominent Brand Title IN FRONT of the 3D Floating Laptop in Dark Blue (z-20) */}
       <div 
         className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-20"
         aria-hidden="true"
       >
-        <span className="font-heading text-[11vw] sm:text-[12.5vw] md:text-[12.5vw] font-black tracking-tight text-[#1D1D1F] uppercase leading-none text-center select-none drop-shadow-sm">
+        <span className="font-heading text-[11vw] sm:text-[12.5vw] md:text-[12.5vw] font-black tracking-tight text-[#0A2540] uppercase leading-none text-center select-none drop-shadow-sm">
           HACKPIXEL
         </span>
       </div>

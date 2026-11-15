@@ -67,32 +67,32 @@ export const IdeaCarousel: React.FC<IdeaCarouselProps> = ({ ideas, onCopy }) => 
   return (
     <div className="space-y-4">
       {/* Controls Bar: View Toggle + Slide Navigation */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-white border border-slate-200 rounded-2xl p-3 shadow-xs">
-        <div className="flex items-center gap-2">
-          <span className="font-mono text-xs text-[#6E6E73]">View:</span>
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs">
+        <div className="flex items-center gap-2.5">
+          <span className="font-mono text-sm font-bold text-[#505054]">View:</span>
           <div className="inline-flex rounded-xl border border-slate-200 p-0.5 bg-[#F5F5F7]">
             <button
               type="button"
               onClick={() => setViewMode('carousel')}
-              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-mono font-medium transition-all cursor-pointer ${
+              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-mono font-semibold transition-all cursor-pointer ${
                 viewMode === 'carousel'
                   ? 'bg-[#007AFF] text-white shadow-xs'
                   : 'text-[#6E6E73] hover:text-[#1D1D1F]'
               }`}
             >
-              <SlidersHorizontal className="w-3.5 h-3.5" />
+              <SlidersHorizontal className="w-4 h-4" />
               <span>Carousel</span>
             </button>
             <button
               type="button"
               onClick={() => setViewMode('grid')}
-              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-mono font-medium transition-all cursor-pointer ${
+              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-mono font-semibold transition-all cursor-pointer ${
                 viewMode === 'grid'
                   ? 'bg-[#007AFF] text-white shadow-xs'
                   : 'text-[#6E6E73] hover:text-[#1D1D1F]'
               }`}
             >
-              <LayoutGrid className="w-3.5 h-3.5" />
+              <LayoutGrid className="w-4 h-4" />
               <span>Paginated Grid</span>
             </button>
           </div>
@@ -100,15 +100,15 @@ export const IdeaCarousel: React.FC<IdeaCarouselProps> = ({ ideas, onCopy }) => 
 
         {viewMode === 'carousel' ? (
           <div className="flex items-center gap-3">
-            <span className="font-mono text-xs text-[#007AFF] font-bold">
+            <span className="font-mono text-sm text-[#007AFF] font-bold">
               Idea {selectedIndex + 1} of {ideas.length}
             </span>
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={scrollPrev}
                 disabled={prevBtnDisabled}
-                className="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-slate-200 bg-[#F5F5F7] text-[#1D1D1F] hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
+                className="inline-flex items-center justify-center w-9 h-9 rounded-xl border border-slate-200 bg-[#F5F5F7] text-[#1D1D1F] hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer shadow-2xs"
                 aria-label="Previous idea"
               >
                 <ChevronLeft className="w-4 h-4" />
@@ -117,7 +117,7 @@ export const IdeaCarousel: React.FC<IdeaCarouselProps> = ({ ideas, onCopy }) => 
                 type="button"
                 onClick={scrollNext}
                 disabled={nextBtnDisabled}
-                className="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-slate-200 bg-[#F5F5F7] text-[#1D1D1F] hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
+                className="inline-flex items-center justify-center w-9 h-9 rounded-xl border border-slate-200 bg-[#F5F5F7] text-[#1D1D1F] hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer shadow-2xs"
                 aria-label="Next idea"
               >
                 <ChevronRight className="w-4 h-4" />
@@ -126,13 +126,13 @@ export const IdeaCarousel: React.FC<IdeaCarouselProps> = ({ ideas, onCopy }) => 
           </div>
         ) : (
           /* Grid Pagination Settings */
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1.5 text-xs font-mono text-[#6E6E73]">
+          <div className="flex items-center gap-3.5">
+            <div className="flex items-center gap-2 text-sm font-mono text-[#505054]">
               <span>Show:</span>
               <select
                 value={pageSize}
                 onChange={(e) => setPageSize(Number(e.target.value))}
-                className="bg-[#F5F5F7] border border-slate-200 rounded-lg px-2 py-1 text-[#1D1D1F] text-xs font-medium focus:outline-hidden"
+                className="bg-[#F5F5F7] border border-slate-200 rounded-lg px-2.5 py-1.5 text-[#1D1D1F] text-sm font-semibold focus:outline-hidden"
               >
                 <option value={3}>3 / page</option>
                 <option value={5}>5 / page</option>
@@ -140,7 +140,7 @@ export const IdeaCarousel: React.FC<IdeaCarouselProps> = ({ ideas, onCopy }) => 
               </select>
             </div>
 
-            <span className="font-mono text-xs text-[#007AFF] font-bold">
+            <span className="font-mono text-sm text-[#007AFF] font-bold">
               Page {currentPage} of {totalPages}
             </span>
           </div>
@@ -192,18 +192,18 @@ export const IdeaCarousel: React.FC<IdeaCarouselProps> = ({ ideas, onCopy }) => 
 
           {/* Pagination Navigation Controls */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-between gap-3 pt-3 border-t border-slate-200">
+            <div className="flex items-center justify-between gap-3 pt-4 border-t border-slate-200">
               <button
                 type="button"
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
-                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-mono text-[#1D1D1F] hover:bg-[#F5F5F7] disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-sm font-mono font-semibold text-[#1D1D1F] hover:bg-[#F5F5F7] disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer shadow-2xs"
               >
-                <ChevronLeft className="w-3.5 h-3.5" />
+                <ChevronLeft className="w-4 h-4" />
                 <span>Previous Page</span>
               </button>
 
-              <div className="flex items-center gap-1 font-mono text-xs">
+              <div className="flex items-center gap-1.5 font-mono text-sm">
                 {Array.from({ length: totalPages }).map((_, pIdx) => {
                   const pNum = pIdx + 1
                   return (
@@ -211,7 +211,7 @@ export const IdeaCarousel: React.FC<IdeaCarouselProps> = ({ ideas, onCopy }) => 
                       key={pNum}
                       type="button"
                       onClick={() => setCurrentPage(pNum)}
-                      className={`w-7 h-7 rounded-md font-bold transition-all cursor-pointer ${
+                      className={`w-8 h-8 rounded-lg font-bold transition-all cursor-pointer ${
                         currentPage === pNum
                           ? 'bg-[#007AFF] text-white shadow-xs'
                           : 'bg-white border border-slate-200 text-[#1D1D1F] hover:bg-[#F5F5F7]'
@@ -227,10 +227,10 @@ export const IdeaCarousel: React.FC<IdeaCarouselProps> = ({ ideas, onCopy }) => 
                 type="button"
                 onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
-                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-mono text-[#1D1D1F] hover:bg-[#F5F5F7] disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-sm font-mono font-semibold text-[#1D1D1F] hover:bg-[#F5F5F7] disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer shadow-2xs"
               >
                 <span>Next Page</span>
-                <ChevronRight className="w-3.5 h-3.5" />
+                <ChevronRight className="w-4 h-4" />
               </button>
             </div>
           )}
