@@ -24,6 +24,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+@app.exception_handler(404)
+async def custom_404_handler(request: Request, exc):
+    from fastapi.responses import JSONResponse
+    return JSONResponse(
+        status_code=404,
+        content={
+            "detail": "Custom 404 Not Found",
+            "received_path": request.url.path,
+            "scope_path": request.scope.get("path"),
+            "scope_root_path": request.scope.get("root_path"),
+            "headers": dict(request.headers),
+        },
+    )
+
 # Mount static directory for CSS, JS, and legacy assets
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
