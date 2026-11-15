@@ -1,5 +1,7 @@
 # Hackpixel ⚡
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fluthfan-tech%2Fhackpixel&env=GEMINI_API_KEY,USE_MOCK_LLM,LLM_MODEL&project-name=hackpixel)
+
 > **Scoped, scored, and ranked hackathon project ideas you can actually finish on time.**
 
 Hackpixel is a developer-centric hackathon ideation assistant. Powered by **FastAPI**, **React 19**, **Three.js**, **Tailwind CSS**, and **Google Gemini 2.5**, it collects your real-world constraints—time limit, team size, skill level, and tech stack—and produces 10 realistically scoped project cards evaluated against a transparent 5-dimension rubric.
