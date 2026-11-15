@@ -12,7 +12,6 @@ import {
 
 import { Hero3DLaptop } from './components/Hero3DLaptop'
 import { StatusStrip } from './components/StatusStrip'
-import { ComingSoonCard } from './components/ComingSoonCard'
 import { ParametersForm, type HackathonFormInput } from './components/ParametersForm'
 import { IdeaCarousel } from './components/IdeaCarousel'
 import type { IdeaItem } from './components/IdeaCard'
@@ -326,11 +325,6 @@ export const App: React.FC = () => {
                 </p>
               </div>
             )}
-
-            {/* Compact Coming Soon Card */}
-            <div className="pt-2">
-              <ComingSoonCard />
-            </div>
           </div>
         </div>
       </main>
