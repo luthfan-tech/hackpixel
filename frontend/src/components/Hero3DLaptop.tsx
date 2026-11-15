@@ -439,12 +439,19 @@ export const Hero3DLaptop: React.FC<Hero3DLaptopProps> = ({ className = '' }) =>
         className="relative z-10 w-full h-full cursor-grab active:cursor-grabbing"
       />
 
-      {/* Prominent Brand Title IN FRONT of the 3D Floating Laptop in Dark Blue (z-20) */}
+      {/* Prominent Brand Title IN FRONT of the 3D Floating Laptop in Apple Electric Blue with crisp white contour outline (z-20) */}
       <div 
         className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-20"
         aria-hidden="true"
       >
-        <span className="font-heading text-[11vw] sm:text-[12.5vw] md:text-[12.5vw] font-black tracking-tight text-[#0A2540] uppercase leading-none text-center select-none drop-shadow-sm">
+        <span 
+          className="font-heading text-[11vw] sm:text-[12.5vw] md:text-[12.5vw] font-black tracking-tight text-[#007AFF] uppercase leading-none text-center select-none"
+          style={{
+            WebkitTextStroke: '2.5px #FFFFFF',
+            paintOrder: 'stroke fill',
+            filter: 'drop-shadow(0 0 16px rgba(255, 255, 255, 0.95)) drop-shadow(0 4px 20px rgba(0, 122, 255, 0.35)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.12))',
+          }}
+        >
           HACKPIXEL
         </span>
       </div>
