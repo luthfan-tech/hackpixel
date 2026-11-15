@@ -1,5 +1,6 @@
 from pathlib import Path
 from fastapi import FastAPI, HTTPException, Request, status
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -15,6 +16,14 @@ app = FastAPI(
     version="0.1.0",
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Mount static directory for CSS, JS, and legacy assets
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
@@ -24,15 +33,6 @@ if FRONTEND_DIST.exists():
     if assets_dir.exists():
         app.mount("/assets", StaticFiles(directory=str(assets_dir)), name="frontend_assets")
     app.mount("/app", StaticFiles(directory=str(FRONTEND_DIST), html=True), name="frontend_app")
-
-
-@app.middleware("http")
-async def vercel_path_normalizer(request: Request, call_next):
-    """Normalizes paths forwarded by Vercel Serverless Function rewrites."""
-    path = request.scope.get("path", "")
-    if "/api/index.py" in path:
-        request.scope["path"] = path.replace("/api/index.py", "") or "/"
-    return await call_next(request)
 
 
 @app.get("/favicon.svg", response_class=FileResponse)
@@ -129,6 +129,7 @@ def serve_readme():
     return FileResponse(readme_file, media_type="text/markdown")
 
 
+@app.post("/", response_model=IdeaResponse)
 @app.post("/api/ideas", response_model=IdeaResponse)
 @app.post("/ideas", response_model=IdeaResponse)
 def create_ideas(payload: HackathonInput):
