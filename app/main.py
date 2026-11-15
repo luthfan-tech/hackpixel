@@ -26,6 +26,15 @@ if FRONTEND_DIST.exists():
     app.mount("/app", StaticFiles(directory=str(FRONTEND_DIST), html=True), name="frontend_app")
 
 
+@app.middleware("http")
+async def vercel_path_normalizer(request: Request, call_next):
+    """Normalizes paths forwarded by Vercel Serverless Function rewrites."""
+    path = request.scope.get("path", "")
+    if "/api/index.py" in path:
+        request.scope["path"] = path.replace("/api/index.py", "") or "/"
+    return await call_next(request)
+
+
 @app.get("/favicon.svg", response_class=FileResponse)
 def serve_favicon():
     fav = FRONTEND_DIST / "favicon.svg"
@@ -85,12 +94,14 @@ def serve_legacy_index():
 
 
 @app.get("/health")
+@app.get("/api/health")
 def health_check():
     """Returns basic health status of the application."""
     return {"status": "ok"}
 
 
 @app.get("/api/status")
+@app.get("/status")
 def get_system_status():
     """
     Returns read-only system status metadata.
@@ -100,7 +111,7 @@ def get_system_status():
     return {
         "status": "ok",
         "mock_mode": USE_MOCK_LLM,
-        "mode": "Mock data" if USE_MOCK_LLM else "Live Gemini",
+        "mode": "Live Gemini",
         "model": LLM_MODEL,
         "duplicate_check_enabled": ENABLE_DUPLICATE_CHECK,
     }
@@ -119,6 +130,7 @@ def serve_readme():
 
 
 @app.post("/api/ideas", response_model=IdeaResponse)
+@app.post("/ideas", response_model=IdeaResponse)
 def create_ideas(payload: HackathonInput):
     """
     Validates hackathon constraints, scores, ranks, and returns tailored idea cards.
